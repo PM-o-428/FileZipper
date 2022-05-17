@@ -1,8 +1,8 @@
 <?php
+include("db_connect.php");
 session_start();
-$baseurl = "http://localhost/SuperSimplePHPFileStorageAndUploader/";
-$username = "admin";
-$password = "admin";
+$baseurl = "http://localhost/project/FileZipper/";
+
 if(!file_exists("uploads"))
 	mkdir("uploads");
 ?>
@@ -256,8 +256,15 @@ if(!file_exists("uploads"))
     <body>
 
         <?php 
-        if(isset($_POST["username"])){
-            if($_POST["username"] == $username && $_POST["password"] == $password){
+        
+        if(isset($_POST['signin'])){
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            $sql = "SELECT * from users where username='$username' AND password='$password'";
+            $result = mysqli_query($connection,$sql);
+            $num = mysqli_num_rows($result);
+            if($num==1){ //Login Successfull
                 $_SESSION["username"] = $username;
                 $_SESSION["password"] = $password;
                 ?>
@@ -266,8 +273,8 @@ if(!file_exists("uploads"))
                 <?php
             }else{
                 ?>
-                <div style="padding: 400px; text-align: center; font-size:250%; font-weight:2900">
-                    <p><b>Please try again</b></p>
+                <div style="padding: 400px; text-align: center; font-size:250%; font-weight:2900; color:white">
+                    <p><b>Wrong Credentials! <br>Please try again</b></p>
                 </div>
                 <!-- to check if user is present in database, if present then to give a prompt of incorrect password, else to prompt a sign in message -->  
                 <?php
@@ -307,6 +314,7 @@ if(!file_exists("uploads"))
                         if(isset($_GET["delete"])){
         					if(file_exists("uploads/" . $_GET["delete"])){
         						unlink("uploads/" . $_GET["delete"]);
+                                
         						echo "<div class='alert'>File is deleted successfully.</div>";
         					}
         				}
@@ -385,21 +393,21 @@ if(!file_exists("uploads"))
                 <div class="main" style="font-family: 'Jost', sans-serif; margin-left:1100px;">  	
                     <input type="checkbox" id="chk" aria-hidden="true">
                         <div class="signup">
-                            <form>
+                            <form method="post" action="sql.php">
                                 <label for="chk" aria-hidden="true">Sign up</label>
-                                <input type="text" name="txt" placeholder="UserName" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; margin-top:-15px">
+                                <input type="text" name="username2" placeholder="UserName" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; margin-top:-15px">
                                 <input type="email" name="email" placeholder="Email" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
-                                <input type="password" name="pswd" placeholder="Password" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
-                                <button>Sign up</button>
+                                <input type="password" name="password2" placeholder="Password" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
+                                <button name='signup'>Sign up</button>
                             </form>
                         </div>
 
                         <div class="login">
-                            <form>
+                            <form method="post" action='index.php'>
                                 <label for="chk" aria-hidden="true" style="color:red">Login</label>
-                                <input type="text" name="Username" placeholder="UserName" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
-                                <input type="password" name="Password" placeholder="Password" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
-                                <button>Login</button>
+                                <input type="text" name="username" placeholder="UserName" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
+                                <input type="password" name="password" placeholder="Password" style="border-radius: 20px; font-family:Verdana, Geneva, Tahoma, sans-serif; letter-spacing: 0.1ch; ">
+                                <button name="signin">Login</button>
                             </form>
                         </div>
                 </div>
@@ -408,7 +416,8 @@ if(!file_exists("uploads"))
                 <?php
             } 
             
-        }
+        } 
+    
         ?>
                 
         
