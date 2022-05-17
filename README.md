@@ -1,4 +1,4 @@
-# DocumentStorage(v1.0)
+# FileZipper(v1.0)
  
   * A simple file storage service, which can be deployed in any server
   * Done using PHP as backend ; CSS, JS as frontend and MySQL as the database
